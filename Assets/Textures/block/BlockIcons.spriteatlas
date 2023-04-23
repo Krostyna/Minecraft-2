@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlockIcons
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 128
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    - serializedVersion: 3
+      m_BuildTarget: Standalone
+      m_MaxTextureSize: 128
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 12
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 9c3cd9ca0d375074cbf8af06a0f4a36d, type: 3}
+    - {fileID: 2800000, guid: 8bf945048df04d142822152f02907d01, type: 3}
+    - {fileID: 2800000, guid: 48e77c1fad328b847a27237e755efc0c, type: 3}
+    - {fileID: 2800000, guid: 9a58a6240cacf594d8e873cbe62efb8a, type: 3}
+    - {fileID: 2800000, guid: 45e3cacd61931ce4e8a7124b46cc347d, type: 3}
+    bindAsDefault: 0
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 8bf945048df04d142822152f02907d01, type: 3}
+  - {fileID: 21300000, guid: 9a58a6240cacf594d8e873cbe62efb8a, type: 3}
+  - {fileID: 21300000, guid: 9c3cd9ca0d375074cbf8af06a0f4a36d, type: 3}
+  - {fileID: 21300000, guid: 45e3cacd61931ce4e8a7124b46cc347d, type: 3}
+  - {fileID: 21300000, guid: 48e77c1fad328b847a27237e755efc0c, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - dirt
+  - sand
+  - bedrock
+  - stone
+  - grass_block_side
+  m_RenderDataMap: {}
+  m_Tag: BlockIcons
+  m_IsVariant: 0
