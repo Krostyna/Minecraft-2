@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
+using System.IO;
 
 public class World : MonoBehaviour
 {
-    [Header("World Generation Values")]
-    public int seed;
-    public BiomeAttribute biome;
+    public Settings settings;
 
-    [Header("Performance")]
-    public bool enableThreading;
+    [Header("World Generation Values")]
+    public BiomeAttribute biome;
 
     public Transform player;
     public Vector3 spawnPosition;
@@ -46,9 +45,20 @@ public class World : MonoBehaviour
 
     private void Start()
     {
-        Random.InitState(seed);
+        if (File.Exists(Application.dataPath + "/settings.cfg"))
+        {
+            string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
+            settings = JsonUtility.FromJson<Settings>(jsonImport);
+        }
+        else
+        {
+            string jsonExport = JsonUtility.ToJson(settings);
+            File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
+        }
 
-        if (enableThreading)
+        Random.InitState(settings.seed);
+
+        if (settings.enableThreading)
         {
             ChunkUpdateThread = new Thread(new ThreadStart(ThreadedUpdate));
             ChunkUpdateThread.Start();
@@ -78,7 +88,7 @@ public class World : MonoBehaviour
                 chunksToDraw.Dequeue().CreateMesh();
         }
 
-        if (!enableThreading)
+        if (!settings.enableThreading)
         {
             if (!applyingModifications)
                 ApplyModifications();
@@ -93,9 +103,9 @@ public class World : MonoBehaviour
 
     void GenerateWorld()
     {
-        for(int x = (VoxelData.WorldSizeInChunks / 2)-VoxelData.ViewDistatnceInChunks; x < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistatnceInChunks; x++)
+        for(int x = (VoxelData.WorldSizeInChunks / 2)-settings.viewDistance; x < (VoxelData.WorldSizeInChunks / 2) + settings.viewDistance; x++)
         {
-            for (int z = (VoxelData.WorldSizeInChunks / 2) - VoxelData.ViewDistatnceInChunks; z < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistatnceInChunks; z++)
+            for (int z = (VoxelData.WorldSizeInChunks / 2) - settings.viewDistance; z < (VoxelData.WorldSizeInChunks / 2) + settings.viewDistance; z++)
             {
                 ChunkCoord newChunk = new ChunkCoord(x, z);
                 chunks[x,z] = new Chunk(newChunk,this);
@@ -150,7 +160,7 @@ public class World : MonoBehaviour
 
     private void OnDisable()
     {
-        if (enableThreading)
+        if (settings.enableThreading)
         {
             ChunkUpdateThread.Abort();
         }
@@ -207,31 +217,31 @@ public class World : MonoBehaviour
         activeChunks.Clear();
 
         // Loop through all chunks currently within view distance of the player
-        for(int x = coord.x - VoxelData.ViewDistatnceInChunks; x < coord.x+VoxelData.ViewDistatnceInChunks; x++)
+        for (int x = coord.x - settings.viewDistance; x < coord.x + settings.viewDistance; x++)
         {
-            for (int z = coord.z - VoxelData.ViewDistatnceInChunks; z < coord.z + VoxelData.ViewDistatnceInChunks; z++)
+            for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
             {
                 // If the current chunk is in the world...
-                if (isChunkInWorld(new ChunkCoord(x,z)))
+                if (isChunkInWorld(new ChunkCoord(x, z)))
                 {
                     // Check if it active, if not, activate it.
-                    if (chunks[x,z]==null)
+                    if (chunks[x, z] == null)
                     {
                         chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
-                        chunksToCreate.Add(new ChunkCoord(x,z));
+                        chunksToCreate.Add(new ChunkCoord(x, z));
                     }
-                    else if(!chunks[x,z].isActive)
+                    else if (!chunks[x, z].isActive)
                     {
-                        chunks[x,z].isActive = true;
-                        
+                        chunks[x, z].isActive = true;
+
                     }
                     activeChunks.Add(new ChunkCoord(x, z));
                 }
 
                 // Check through previously active chunks to see if this chunk is here. If it is, remove it from the list
-                for(int i = 0; i < previouslyActiveChunks.Count; i++)
+                for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x,z)))
+                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
                         previouslyActiveChunks.RemoveAt(i);
                 }
             }
@@ -434,4 +444,23 @@ public class VoxelMod
         position = _position;
         id = _id;
     }
+}
+
+[System.Serializable]
+public class Settings
+{
+    [Header("Game Data")]
+    public string version;
+
+    [Header("Performance")]
+    public int viewDistance;
+    public bool enableThreading;
+
+    [Header("Controls")]
+    [Range(0.1f,10f)]
+    public float mouseSensitivity;
+
+    [Header("World Generation")]
+    public int seed;
+
 }

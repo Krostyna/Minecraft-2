@@ -377,9 +377,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98a8d3a65d7eeb44b98828bdf88a515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 2147483647
+  settings:
+    version: 0.1
+    viewDistance: 9
+    enableThreading: 1
+    mouseSensitivity: 2
+    seed: 1646432
   biome: {fileID: 11400000, guid: bef23488a56f70f438a827c6674514a2, type: 2}
-  enableThreading: 1
   player: {fileID: 1185966862}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: 964298f5433c91442b6cc4554874b023, type: 2}
@@ -2384,6 +2388,7 @@ MonoBehaviour:
   jumpForce: 5
   gravity: -9.8
   playerWidth: 0.3
+  playerHeight: 2
   highlightBlock: {fileID: 577126097}
   placeBlock: {fileID: 390121416}
   checkIncrement: 0.1
