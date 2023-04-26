@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -383,7 +383,9 @@ MonoBehaviour:
     enableThreading: 1
     mouseSensitivity: 2
     seed: 1646432
-  biome: {fileID: 11400000, guid: bef23488a56f70f438a827c6674514a2, type: 2}
+  biomes:
+  - {fileID: 11400000, guid: bef23488a56f70f438a827c6674514a2, type: 2}
+  - {fileID: 11400000, guid: 36f7b5a8c756e9c44b23a80bf9ccc407, type: 2}
   player: {fileID: 1185966862}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: 964298f5433c91442b6cc4554874b023, type: 2}
@@ -509,6 +511,26 @@ MonoBehaviour:
     bottomFaceTexture: 52
     leftFaceTexture: 52
     rightFaceTexture: 52
+  - blockName: Cactus_Top
+    isSolid: 1
+    isTransparent: 0
+    icon: {fileID: -2026374236, guid: e25f927f28cfeea459d7f58f1dc14145, type: 3}
+    backFaceTexture: 70
+    frontFaceTexture: 70
+    topFaceTexture: 69
+    bottomFaceTexture: 71
+    leftFaceTexture: 70
+    rightFaceTexture: 70
+  - blockName: Cactus
+    isSolid: 1
+    isTransparent: 0
+    icon: {fileID: -324963905, guid: e25f927f28cfeea459d7f58f1dc14145, type: 3}
+    backFaceTexture: 70
+    frontFaceTexture: 70
+    topFaceTexture: 71
+    bottomFaceTexture: 71
+    leftFaceTexture: 70
+    rightFaceTexture: 70
   debugScreen: {fileID: 1231705838}
   creativeInventoryWindow: {fileID: 248579833}
   cursorSlot: {fileID: 2275270150817038154}
@@ -1170,7 +1192,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -1198,7 +1220,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8, z: -0.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1885,7 +1907,6 @@ GameObject:
   - component: {fileID: 941889104}
   - component: {fileID: 941889107}
   - component: {fileID: 941889106}
-  - component: {fileID: 941889105}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1908,19 +1929,6 @@ Transform:
   m_Father: {fileID: 577126097}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &941889105
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 941889103}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &941889106
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1982,7 +1990,6 @@ GameObject:
   - component: {fileID: 1044044636}
   - component: {fileID: 1044044639}
   - component: {fileID: 1044044638}
-  - component: {fileID: 1044044637}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -2005,19 +2012,6 @@ Transform:
   m_Father: {fileID: 390121416}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1044044637
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1044044635}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1044044638
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2387,7 +2381,7 @@ MonoBehaviour:
   sprintSpeed: 6
   jumpForce: 5
   gravity: -9.8
-  playerWidth: 0.3
+  playerWidth: 0.25
   playerHeight: 2
   highlightBlock: {fileID: 577126097}
   placeBlock: {fileID: 390121416}

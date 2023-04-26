@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -18,7 +17,7 @@ public class Player : MonoBehaviour
     public float jumpForce = 5f;
     public float gravity = -9.8f;
 
-    public float playerWidth = 0.15f;
+    public float playerWidth = 0.25f;
     public float playerHeight = 2f;
 
     private float horizontal;
@@ -41,7 +40,7 @@ public class Player : MonoBehaviour
         cam = GameObject.Find("Main Camera").transform;
         world = GameObject.Find("World").GetComponent<World>();
 
-        Cursor.lockState = CursorLockMode.Locked;
+        world.inUI = false;
     }
 
     private void FixedUpdate()
@@ -108,6 +107,9 @@ public class Player : MonoBehaviour
 
     private void GetPlayerInputs()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
         mouseHorizontal = Input.GetAxis("Mouse X");
@@ -212,8 +214,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth+0.1f)) ||
-                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth + 0.1f))
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z + playerWidth)) ||
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z + playerWidth))
                 )
                 return true;
             else
@@ -225,8 +227,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth + 0.1f)) ||
-                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth + 0.1f))
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y, transform.position.z - playerWidth)) ||
+                world.CheckForVoxel(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z - playerWidth))
                 )
                 return true;
             else
@@ -238,8 +240,8 @@ public class Player : MonoBehaviour
         get
         {
             if (
-                world.CheckForVoxel(new Vector3(transform.position.x - playerWidth + 0.1f, transform.position.y, transform.position.z )) ||
-                world.CheckForVoxel(new Vector3(transform.position.x - playerWidth + 0.1f, transform.position.y + 1f, transform.position.z))
+                world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y, transform.position.z )) ||
+                world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 1f, transform.position.z))
                 )
                 return true;
             else

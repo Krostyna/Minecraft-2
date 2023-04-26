@@ -9,7 +9,7 @@ public class World : MonoBehaviour
     public Settings settings;
 
     [Header("World Generation Values")]
-    public BiomeAttribute biome;
+    public BiomeAttribute[] biomes;
 
     public Transform player;
     public Vector3 spawnPosition;
@@ -136,7 +136,8 @@ public class World : MonoBehaviour
                 if (chunksToUpdate[index].isEditable)
                 {
                     chunksToUpdate[index].UpdateChunk();
-                    activeChunks.Add(chunksToUpdate[index].coord);
+                    if (!activeChunks.Contains(chunksToUpdate[index].coord))
+                        activeChunks.Add(chunksToUpdate[index].coord);
                     chunksToUpdate.RemoveAt(index);
                     updated = true;
                 }
@@ -221,27 +222,29 @@ public class World : MonoBehaviour
         {
             for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
             {
+                ChunkCoord thisChunkCoord = new ChunkCoord(x,z);
+
                 // If the current chunk is in the world...
-                if (isChunkInWorld(new ChunkCoord(x, z)))
+                if (isChunkInWorld(thisChunkCoord))
                 {
                     // Check if it active, if not, activate it.
                     if (chunks[x, z] == null)
                     {
-                        chunks[x, z] = new Chunk(new ChunkCoord(x, z), this);
-                        chunksToCreate.Add(new ChunkCoord(x, z));
+                        chunks[x, z] = new Chunk(thisChunkCoord, this);
+                        chunksToCreate.Add(thisChunkCoord);
                     }
                     else if (!chunks[x, z].isActive)
                     {
                         chunks[x, z].isActive = true;
 
                     }
-                    activeChunks.Add(new ChunkCoord(x, z));
+                    activeChunks.Add(thisChunkCoord);
                 }
 
                 // Check through previously active chunks to see if this chunk is here. If it is, remove it from the list
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
+                    if (previouslyActiveChunks[i].Equals(thisChunkCoord))
                         previouslyActiveChunks.RemoveAt(i);
                 }
             }
@@ -291,12 +294,14 @@ public class World : MonoBehaviour
             if (_inUI)
             {
                 Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 creativeInventoryWindow.SetActive(true);
                 cursorSlot.SetActive(true);
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
                 creativeInventoryWindow.SetActive(false);
                 cursorSlot.SetActive(false);
             }
@@ -317,15 +322,20 @@ public class World : MonoBehaviour
         if (yPos == 0)
             return 1;
 
+        /* BIOME SELECTION PASS */
+
+        BiomeAttribute biome = biomes[1];
+
+
         /* BASIC TERRAIN PASS */
 
         int terrainHeight = Mathf.FloorToInt(biome.terrainHeight * Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0.0f,biome.terrainScale)) + biome.solidGroundHeight;
         byte voxelValue = 0;
 
         if (yPos == terrainHeight)
-            voxelValue = 3; //Solid block
+            voxelValue = biome.surfaceBlock; //Solid block
         else if (yPos < terrainHeight && yPos > terrainHeight - 4)
-            voxelValue = 5;
+            voxelValue = biome.subSurfaceBlock;
         else if (yPos > terrainHeight)
             return 0; //Air block
         else voxelValue = 2; //Grass block
@@ -348,13 +358,13 @@ public class World : MonoBehaviour
 
         /* TREE PASS */
         
-        if(yPos == terrainHeight)
+        if(yPos == terrainHeight && biome.placeMajorFlora)
         {
-            if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0,biome.treeZoneScale) > biome.treeZoneTreshold)
+            if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0,biome.majorFloraZoneScale) > biome.majorFloraZoneTreshold)
             {
-                if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z),0,biome.treePlacementScale)>biome.treePlacementTreshold)
+                if(Noise.Get2DPerlin(new Vector2(pos.x, pos.z),0,biome.majorFloraPlacementScale) >biome.majorFloraPlacementTreshold)
                 {
-                    modifications.Enqueue(Structure.MakeTree(pos, biome.minTreeHeight, biome.maxTreeHeight));
+                    modifications.Enqueue(Structure.GenerateMajorFlora(biome.majorFloraIndex,pos, biome.minHeight, biome.maxHeight));
                 }
             }
         }

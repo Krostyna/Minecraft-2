@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Chunk
 {
@@ -21,6 +16,7 @@ public class Chunk
     List<int> transparentTriangles = new List<int>();
     Material[] materials = new Material[2];
     List<Vector2> uvs = new List<Vector2>();
+    List<Vector3> normals = new List<Vector3>();
 
     public Vector3 position;
 
@@ -115,6 +111,7 @@ public class Chunk
         triangles.Clear();
         transparentTriangles.Clear();
         uvs.Clear();
+        normals.Clear();
     }
 
     public bool isActive
@@ -222,6 +219,9 @@ public class Chunk
                 vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 2]]);
                 vertices.Add(pos + VoxelData.voxelVerts[VoxelData.voxelTris[p, 3]]);
 
+                for (int i = 0; i < 4; i++)
+                    normals.Add(VoxelData.faceChecks[p]);
+
                 AddTexture(world.blockTypes[blockID].GetTextureID(p));
 
                 if (!isTransparent)
@@ -243,7 +243,6 @@ public class Chunk
                     transparentTriangles.Add(vertexIndex + 3);
                 }
 
-
                 vertexIndex += 4;
 
             }
@@ -262,7 +261,7 @@ public class Chunk
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetTriangles(transparentTriangles.ToArray(), 1);
 
-        mesh.RecalculateNormals();
+        mesh.normals= normals.ToArray();
         meshFilter.mesh = mesh;
     }
 

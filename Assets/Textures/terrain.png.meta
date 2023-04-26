@@ -1554,7 +1554,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: terrain_69
+      name: terrain_cactus_top
       rect:
         serializedVersion: 2
         x: 80
@@ -1575,7 +1575,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: terrain_70
+      name: terrain_cactus_side
       rect:
         serializedVersion: 2
         x: 96
@@ -1596,7 +1596,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: terrain_71
+      name: terrain_cactus_bottom
       rect:
         serializedVersion: 2
         x: 112
@@ -5647,62 +5647,62 @@ TextureImporter:
       terrain_66: -464223890
       terrain_67: 343363544
       terrain_68: -2026374236
-      terrain_69: 39523282
-      terrain_70: 952753546
-      terrain_71: 432113469
-      terrain_72: -11111380
-      terrain_73: 115710728
-      terrain_74: -1786993695
-      terrain_75: 2038122139
-      terrain_76: 103763609
-      terrain_77: 291540829
-      terrain_78: -548464966
-      terrain_79: -719092026
-      terrain_8: -614444704
-      terrain_80: -604794642
-      terrain_81: -527668548
-      terrain_82: 1275966287
-      terrain_83: -67888594
-      terrain_84: -1577262977
-      terrain_85: -610993909
-      terrain_86: -1706201098
-      terrain_87: 1585235813
-      terrain_88: 258210635
-      terrain_89: 638806298
-      terrain_9: -1319768593
-      terrain_90: 1382242185
-      terrain_91: -1119856559
-      terrain_92: 170973676
-      terrain_93: 718848830
-      terrain_94: -2079590258
-      terrain_95: -1393546461
-      terrain_96: 873872369
-      terrain_97: -1867882792
-      terrain_98: 903879400
-      terrain_99: 2051611344
-      terrain__oak_log_top: 1984283428
-      terrain_bedrock: 216514451
-      terrain_brick: 39523282
-      terrain_coal_ore: -1591731834
-      terrain_cobblestone: 866551270
-      terrain_dandelion: -474261780
-      terrain_dirt: 1696801345
-      terrain_glass: -449408595
-      terrain_grass_side: 190047745
-      terrain_iron_block: -1651548103
-      terrain_iron_ore: -1418932027
-      terrain_leaves: -62591173
-      terrain_leaves_alpha: 1368810456
-      terrain_oak_log_side: 1984283428
-      terrain_oak_sappling: -231613709
-      terrain_rose: 2116624761
-      terrain_sand: 12803789
-      terrain_stone: 1886428340
-      terrain_wood_planks: -1163785313
-      terrain_wool_white: 1214101989
-      terrain_workbench_front: -1682863811
-      terrain_workbench_side: -127486705
-      terrain_workbench_top: -1985706260
+      terrain_72: -1786993695
+      terrain_73: 2038122139
+      terrain_74: 103763609
+      terrain_75: 291540829
+      terrain_76: -548464966
+      terrain_77: -719092026
+      terrain_78: -614444704
+      terrain_79: -604794642
+      terrain_8: -527668548
+      terrain_80: 1275966287
+      terrain_81: -67888594
+      terrain_82: -1577262977
+      terrain_83: -610993909
+      terrain_84: -1706201098
+      terrain_85: 1585235813
+      terrain_86: 258210635
+      terrain_87: 638806298
+      terrain_88: -1319768593
+      terrain_89: 1382242185
+      terrain_9: -1119856559
+      terrain_90: 170973676
+      terrain_91: 718848830
+      terrain_92: -2079590258
+      terrain_93: -1393546461
+      terrain_94: 873872369
+      terrain_95: -1867882792
+      terrain_96: 903879400
+      terrain_97: 2051611344
+      terrain_98: 1984283428
+      terrain_99: 216514451
+      terrain__oak_log_top: 39523282
+      terrain_bedrock: -1591731834
+      terrain_brick: 866551270
+      terrain_cactus_bottom: 952753546
+      terrain_cactus_side: -324963905
+      terrain_cactus_top: -2026374236
+      terrain_coal_ore: -474261780
+      terrain_cobblestone: 1696801345
+      terrain_dandelion: -449408595
+      terrain_dirt: 190047745
+      terrain_glass: -1651548103
+      terrain_grass_side: -1418932027
+      terrain_iron_block: -62591173
+      terrain_iron_ore: 1368810456
+      terrain_leaves: 1984283428
+      terrain_leaves_alpha: -231613709
+      terrain_oak_log_side: 2116624761
+      terrain_oak_sappling: 12803789
+      terrain_rose: 1886428340
+      terrain_sand: -1163785313
+      terrain_stone: 1214101989
+      terrain_wood_planks: -1682863811
+      terrain_wool_white: -127486705
+      terrain_workbench_front: -1985706260
+      terrain_workbench_side: -2026374236
+      terrain_workbench_top: -324963905
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
