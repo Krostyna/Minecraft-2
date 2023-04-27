@@ -5,9 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="BiomeAttributes",menuName = "Minecraft/Biome Attribute")]
 public class BiomeAttribute : ScriptableObject
 {
+    [Header("Biome Settings")]
     public string biomeName;
+    public int offset;
+    public float scale;
 
-    public int solidGroundHeight;
     public int terrainHeight;
     public float terrainScale;
 
