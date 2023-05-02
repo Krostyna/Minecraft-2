@@ -103,15 +103,16 @@ public class WorldData
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
 
         // Then set the voxel in our chunk
-        chunk.map[voxel.x, voxel.y, voxel.z].id = value;
+        chunk.map_id[voxel.x, voxel.y, voxel.z] = value;
         AddToModifiedChunkList(chunk);
     }
 
-    public VoxelState GetVoxel(Vector3 pos)
+
+    public byte GetVoxel(Vector3 pos)
     {
         // If the voxel is outside of the world we don't need to do anything with it
         if (!isVoxelInWorld(pos))
-            return null;
+            return 0;
 
         // Find out the ChunkCoord value of our voxel's chunk
         int x = Mathf.FloorToInt(pos.x / VoxelData.ChunkWidth);
@@ -128,6 +129,6 @@ public class WorldData
         Vector3Int voxel = new Vector3Int((int)(pos.x - x), (int)pos.y, (int)(pos.z - z));
 
         // Then set the voxel in our chunk
-        return chunk.map[voxel.x, voxel.y, voxel.z];
+        return chunk.map_id[voxel.x, voxel.y, voxel.z];
     }
 }

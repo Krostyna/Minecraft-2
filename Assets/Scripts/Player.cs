@@ -51,8 +51,6 @@ public class Player : MonoBehaviour
             if (jumpRequest)
                 Jump();
 
-            transform.Rotate(Vector3.up * mouseHorizontal*world.settings.mouseSensitivity);
-            cam.Rotate(Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
             transform.Translate(velocity, Space.World);
         }
     }
@@ -68,6 +66,9 @@ public class Player : MonoBehaviour
         {
             GetPlayerInputs();
             placeCursorBlocks();
+
+            transform.Rotate(Vector3.up * mouseHorizontal * world.settings.mouseSensitivity);
+            cam.Rotate(Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
         }
     }
 
@@ -107,8 +108,22 @@ public class Player : MonoBehaviour
 
     private void GetPlayerInputs()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SaveSystem.SaveWorld(World.Instance.worldData);
+
+            //If we are running in a standalone build of the game
+            #if UNITY_STANDALONE
+            //Quit the application
             Application.Quit();
+            #endif
+
+            //If we are running in the editor
+            #if UNITY_EDITOR
+            //Stop playing the scene
+            UnityEditor.EditorApplication.isPlaying = false;
+            #endif
+        }
 
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");

@@ -4,16 +4,16 @@ using UnityEngine;
 
 public static class VoxelData
 {
-    public static readonly int ChunkWidth = 16;
-    public static readonly int ChunkHeight = 256;
-    public static readonly int WorldSizeInChunks = 30;
+    public const int ChunkWidth = 16;
+    public const int ChunkHeight = 256;
+    public const int WorldSizeInChunks = 256;
 
     public static int WorldSizeInVoxels
     {
         get { return WorldSizeInChunks * ChunkWidth; }
     }
 
-    public static readonly int TextureAtlasSizeInBlocks = 16;
+    public const int TextureAtlasSizeInBlocks = 16;
     public static float NormalizedBlockTextureSize
     {
         get { return 1f / (float)TextureAtlasSizeInBlocks; }

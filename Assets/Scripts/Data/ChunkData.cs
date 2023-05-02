@@ -24,7 +24,7 @@ public class ChunkData
     }
 
     [HideInInspector] // Displaying lots of data in inspector slows it down even more so hide this one
-    public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    public byte[,,] map_id = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
 
     public ChunkData(Vector2Int pos)
@@ -46,7 +46,7 @@ public class ChunkData
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    map[x, y, z] = new VoxelState(World.Instance.GetVoxel(new Vector3(x + position.x, y, z + position.y)));
+                    map_id[x, y, z] = World.Instance.GetVoxel(new Vector3(x + position.x, y, z + position.y));
 
                 }
             }

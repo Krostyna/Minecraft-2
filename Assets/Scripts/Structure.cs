@@ -28,17 +28,19 @@ public static class Structure
         if(height < minTrunkHeight)
             height = minTrunkHeight;
 
+        //Make trunk of the tree
         for(int i = 1; i < height; i++)
         {
             queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 8));
 
         }
 
-        for (int x = -3; x < 4; x++)
+        //Make crown of the tree
+        for (int x = -2; x < 3; x++)
         {
-            for (int y = 0; y < 7; y++)
+            for (int y = 0; y < 3; y++)
             {
-                for (int z = -3; z < 4; z++)
+                for (int z = -2; z < 3; z++)
                 {
                     queue.Enqueue(new VoxelMod(new Vector3(position.x + x, position.y + height + y, position.z + z), 11));
 
@@ -56,11 +58,13 @@ public static class Structure
         if (height < minTrunkHeight)
             height = minTrunkHeight;
 
-        for (int i = 1; i <= height; i++)
+        for (int i = 1; i <= height-1; i++)
         {
-            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 12));
+            queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + i, position.z), 13));
 
         }
+        queue.Enqueue(new VoxelMod(new Vector3(position.x, position.y + height, position.z), 12));
+
         return queue;
     }
 }

@@ -85,6 +85,11 @@ public class World : MonoBehaviour
             File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
         }
 
+        if (settings.viewDistance > VoxelData.WorldSizeInChunks / 2)
+            settings.viewDistance = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2 - 1);
+        if (settings.loadDistance > VoxelData.WorldSizeInChunks / 2)
+            settings.loadDistance = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2 - 1);
+
         Random.InitState(settings.seed);
 
         if (settings.enableThreading)
@@ -169,8 +174,6 @@ public class World : MonoBehaviour
 
     void UpdateChunks()
     {
-
-
         lock (ChunkUpdateThreadLock)
         {
 
@@ -285,17 +288,16 @@ public class World : MonoBehaviour
 
     public bool CheckForVoxel(Vector3 pos)
     {
-        VoxelState voxel = worldData.GetVoxel(pos);
+        byte voxel_id = worldData.GetVoxel(pos);
 
-        if (blockTypes[voxel.id].isSolid)
-            return true;
-        else
-            return false;
+        return blockTypes[voxel_id].isSolid;
     }
 
     public bool CheckIfVoxelTransparent(Vector3 pos)
     {
-        return worldData.GetVoxel(pos);
+        byte voxel_id = worldData.GetVoxel(pos);
+
+        return blockTypes[voxel_id].isTransparent;
     }
 
 
@@ -514,8 +516,8 @@ public class Settings
     public string version = "0.1";
 
     [Header("Performance")]
-    public int loadDistance = 16;
-    public int viewDistance = 8;
+    public int loadDistance = 5;
+    public int viewDistance = 5;
     public bool enableThreading = true;
 
     [Header("Controls")]

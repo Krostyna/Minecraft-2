@@ -65,7 +65,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; z++)
                 {
-                    if (World.Instance.blockTypes[chunkData.map[x, y, z]].isSolid)
+                    if (World.Instance.blockTypes[chunkData.map_id[x, y, z]].isSolid)
                         UpdateMeshData(new Vector3(x, y, z));
                 }
             }
@@ -116,7 +116,7 @@ public class Chunk
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
 
-        chunkData.map[xCheck, yCheck, zCheck] = newID;
+        chunkData.map_id[xCheck, yCheck, zCheck] = newID;
         World.Instance.worldData.AddToModifiedChunkList(chunkData);
 
         lock (World.Instance.ChunkUpdateThreadLock)
@@ -153,7 +153,7 @@ public class Chunk
         if (!IsVoxelInChunk(x, y, z))
             return World.Instance.CheckIfVoxelTransparent(pos + position);
 
-        return World.Instance.blockTypes[chunkData.map[x, y, z]].isTransparent;
+        return World.Instance.blockTypes[chunkData.map_id[x, y, z]].isTransparent;
     }
 
     public byte GetVoxelFromGlobalVector3(Vector3 pos)
@@ -165,13 +165,13 @@ public class Chunk
         xCheck -= Mathf.FloorToInt(position.x);
         zCheck -= Mathf.FloorToInt(position.z);
 
-        return chunkData.map[xCheck,yCheck,zCheck];
+        return chunkData.map_id[xCheck,yCheck,zCheck];
     }
 
 
     void UpdateMeshData(Vector3 pos)
     {
-        byte blockID = chunkData.map[(int)pos.x, (int)pos.y, (int)pos.z];
+        byte blockID = chunkData.map_id[(int)pos.x, (int)pos.y, (int)pos.z];
         bool isTransparent = World.Instance.blockTypes[blockID].isTransparent;
 
         for (int p = 0; p < 6; p++)
@@ -281,6 +281,7 @@ public class ChunkCoord
 
 }
 
+/*
 [HideInInspector]
 [System.Serializable]
 public class VoxelState
@@ -300,3 +301,4 @@ public class VoxelState
         globalLightPercent = 0f;
     }
 }
+*/
