@@ -23,6 +23,10 @@ public class ChunkData
         }
     }
 
+    [HideInInspector] // Displaying lots of data in inspector slows it down even more so hide this one
+    public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+
+
     public ChunkData(Vector2Int pos)
     {
         position = pos;
@@ -33,9 +37,7 @@ public class ChunkData
         y = _y;
     }
 
-    //[HideInInspector] // Displaying lots of data in inspector slows it down even more so hide this one
-    //public VoxelState[,,] map = new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth)
-
+   
     public void Populate()
     {
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
