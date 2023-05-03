@@ -44,10 +44,26 @@ public class DragAndDropHandler : MonoBehaviour
         if (!cursorSlot.HasItem && !clickedSlot.HasItem)
             return;
 
-        if(clickedSlot.itemSlot.isCreative)
+        if(clickedSlot.itemSlot == null)
         {
+            clickedSlot.itemSlot = new ItemSlot(clickedSlot,cursorSlot.itemSlot.stack);
+            clickedSlot.UpdateSlot();
             cursorItemSlot.EmptySlot();
-            cursorItemSlot.InsertStack(clickedSlot.itemSlot.stack);
+            return;
+        }
+
+        if (clickedSlot.itemSlot.isCreative)
+        {
+            if (cursorItemSlot.HasItem)
+            {
+                cursorItemSlot.EmptySlot();
+                return;
+            }
+            else
+            { 
+                cursorItemSlot.InsertStack(clickedSlot.itemSlot.stack);
+                return;
+            }
         }
 
         if(!cursorSlot.HasItem && clickedSlot.HasItem)
