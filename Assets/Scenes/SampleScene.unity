@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -379,15 +379,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     version: 0.1
-    loadDistance: 5
-    viewDistance: 5
+    loadDistance: 30
+    viewDistance: 30
     enableThreading: 1
     mouseSensitivity: 2
-    seed: 1646432
+    seed: 111111
   biomes:
   - {fileID: 11400000, guid: ef9f85ffb6b9f534ba6b58e634794c82, type: 2}
   - {fileID: 11400000, guid: 36f7b5a8c756e9c44b23a80bf9ccc407, type: 2}
   - {fileID: 11400000, guid: bef23488a56f70f438a827c6674514a2, type: 2}
+  - {fileID: 11400000, guid: f4b1ee13326b8b541bd72812cd1dcaef, type: 2}
   player: {fileID: 1185966862}
   spawnPosition: {x: 0, y: 0, z: 0}
   material: {fileID: 2100000, guid: 964298f5433c91442b6cc4554874b023, type: 2}
@@ -408,7 +409,7 @@ MonoBehaviour:
     isSolid: 1
     isTransparent: 0
     icon: {fileID: 2051611344, guid: e25f927f28cfeea459d7f58f1dc14145, type: 3}
-    timeToMine: 100000
+    timeToMine: 0
     backFaceTexture: 17
     frontFaceTexture: 17
     topFaceTexture: 17
@@ -547,6 +548,17 @@ MonoBehaviour:
     bottomFaceTexture: 71
     leftFaceTexture: 70
     rightFaceTexture: 70
+  - blockName: Snow
+    isSolid: 1
+    isTransparent: 0
+    icon: {fileID: -1190677339, guid: e25f927f28cfeea459d7f58f1dc14145, type: 3}
+    timeToMine: 1
+    backFaceTexture: 66
+    frontFaceTexture: 66
+    topFaceTexture: 66
+    bottomFaceTexture: 66
+    leftFaceTexture: 66
+    rightFaceTexture: 66
   debugScreen: {fileID: 1231705838}
   creativeInventoryWindow: {fileID: 248579833}
   cursorSlot: {fileID: 2275270150817038154}

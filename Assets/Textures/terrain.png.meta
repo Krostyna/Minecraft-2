@@ -1491,7 +1491,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: terrain_66
+      name: terrain_snow
       rect:
         serializedVersion: 2
         x: 32
@@ -5644,7 +5644,6 @@ TextureImporter:
       terrain_62: -168964068
       terrain_63: 1214101989
       terrain_65: -1190677339
-      terrain_66: -464223890
       terrain_67: 343363544
       terrain_68: -2026374236
       terrain_72: -1786993695
@@ -5697,6 +5696,7 @@ TextureImporter:
       terrain_oak_sappling: 12803789
       terrain_rose: 1886428340
       terrain_sand: -1163785313
+      terrain_snow: -1190677339
       terrain_stone: 1214101989
       terrain_wood_planks: -1682863811
       terrain_wool_white: -127486705

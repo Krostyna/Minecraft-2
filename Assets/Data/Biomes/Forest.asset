@@ -15,8 +15,8 @@ MonoBehaviour:
   biomeName: Forest
   offset: 87544
   scale: 0.17
-  terrainHeight: 80
-  terrainScale: 0.3
+  terrainHeight: 90
+  terrainScale: 0.6
   surfaceBlock: 5
   subSurfaceBlock: 5
   majorFloraIndex: 0

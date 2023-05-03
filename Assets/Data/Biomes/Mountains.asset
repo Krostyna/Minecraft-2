@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 820042ab34e7f1041998ae968f075ab6, type: 3}
-  m_Name: Desert
+  m_Name: Mountains
   m_EditorClassIdentifier: 
-  biomeName: Desert
-  offset: 6545
+  biomeName: Mountains
+  offset: 8126
   scale: 0.058
-  terrainHeight: 70
-  terrainScale: 0.05
-  surfaceBlock: 4
-  subSurfaceBlock: 4
-  majorFloraIndex: 1
-  majorFloraZoneScale: 1.06
-  majorFloraZoneTreshold: 0.75
-  majorFloraPlacementScale: 7.5
-  majorFloraPlacementTreshold: 0.8
-  placeMajorFlora: 1
-  maxHeight: 4
-  minHeight: 3
+  terrainHeight: 200
+  terrainScale: 0.7
+  surfaceBlock: 14
+  subSurfaceBlock: 14
+  majorFloraIndex: 0
+  majorFloraZoneScale: 0
+  majorFloraZoneTreshold: 0.1
+  majorFloraPlacementScale: 0
+  majorFloraPlacementTreshold: 0.1
+  placeMajorFlora: 0
+  maxHeight: 0
+  minHeight: 0
   lodes: []

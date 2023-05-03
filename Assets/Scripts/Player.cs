@@ -170,6 +170,13 @@ public class Player : MonoBehaviour
             // Mining block or multiple block in chain
             if (Input.GetMouseButton(0))
             {
+                // We started mining different type of block without releasing mouse button
+                if(minedVoxel != world.GetChunkFromVector3(highlightBlock.position).GetVoxelFromGlobalVector3(highlightBlock.position))
+                {
+                    minedVoxel = world.GetChunkFromVector3(highlightBlock.position).GetVoxelFromGlobalVector3(highlightBlock.position);
+                    startedMiningTime = Time.time;
+                }
+
                 if (miningDone)
                 {
                     startedMiningTime = Time.time;
@@ -179,49 +186,53 @@ public class Player : MonoBehaviour
                     miningSlider.value = 0;
                 }
 
-                if (startedMiningTime + world.blockTypes[minedVoxel].timeToMine <= Time.time && !miningDone)
+                // If the mined Voxel is not "Bedrock" - can be added to properties of block, but we only have one
+                if (minedVoxel != 1)
                 {
-                    world.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0);
-                    miningDone = true;
-                    miningSlider.gameObject.SetActive(false);
-
-                    bool added = false;
-                    UIItemSlot emptySlot = null;
-                    // Check Toolbar if we have item alreadz to stack it
-                    foreach(UIItemSlot slot in toolbar.slots)
+                    if (startedMiningTime + world.blockTypes[minedVoxel].timeToMine <= Time.time && !miningDone)
                     {
-                        if (slot.itemSlot!=null && slot.itemSlot.stack != null)
+                        world.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0);
+                        miningDone = true;
+                        miningSlider.gameObject.SetActive(false);
+
+                        bool added = false;
+                        UIItemSlot emptySlot = null;
+                        // Check Toolbar if we have item alreadz to stack it
+                        foreach (UIItemSlot slot in toolbar.slots)
                         {
-                            // We found same item in toolbar and add 1 to it
-                            if (slot.itemSlot.stack.id == minedVoxel)
+                            if (slot.itemSlot != null && slot.itemSlot.stack != null)
                             {
-                                slot.itemSlot.Get(1);
-                                added = true;
-                                break;
+                                // We found same item in toolbar and add 1 to it
+                                if (slot.itemSlot.stack.id == minedVoxel)
+                                {
+                                    slot.itemSlot.Get(1);
+                                    added = true;
+                                    break;
+                                }
+                            }
+                            else if (emptySlot == null)
+                            {
+                                // We save the first emptz slot in case we didn't found the item stack
+                                emptySlot = slot;
+                            }
+
+                        }
+
+                        // The item is not on the toolbar or it is full
+                        if (added == false)
+                        {
+                            // We have some empty slot
+                            if (emptySlot != null)
+                            {
+                                ItemStack stack = new ItemStack(minedVoxel, 1);
+                                ItemSlot slot = new ItemSlot(emptySlot, stack);
                             }
                         }
-                        else if (emptySlot == null)
-                        {
-                            // We save the first emptz slot in case we didn't found the item stack
-                            emptySlot = slot;
-                        }
-                        
                     }
-
-                    // The item is not on the toolbar or it is full
-                    if(added == false)
-                    { 
-                        // We have some empty slot
-                        if(emptySlot != null)
-                        {
-                            ItemStack stack = new ItemStack(minedVoxel, 1);
-                            ItemSlot slot = new ItemSlot(emptySlot, stack);
-                        }
+                    else
+                    {
+                        miningSlider.value = (Time.time - startedMiningTime) / world.blockTypes[minedVoxel].timeToMine;
                     }
-                }
-                else
-                {
-                    miningSlider.value = (Time.time - startedMiningTime) / world.blockTypes[minedVoxel].timeToMine; 
                 }
             }
 

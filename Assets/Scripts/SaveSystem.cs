@@ -17,7 +17,7 @@ public static class SaveSystem
             Directory.CreateDirectory(savePath);
         }
 
-        Debug.Log("Saving " + world.worldName);
+        Debug.Log("Saving " + world.worldName + " to a folder in: " + savePath);
 
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = new FileStream(savePath + "world.world", FileMode.Create);
