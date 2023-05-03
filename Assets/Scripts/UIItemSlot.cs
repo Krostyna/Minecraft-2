@@ -117,6 +117,12 @@ public class ItemSlot
             uiItemSlot.UpdateSlot();
     }
 
+    public void Get(int amount)
+    {
+        stack.amount += amount;
+        uiItemSlot.UpdateSlot();
+    }
+
     public int Take(int amount)
     {
         if(amount > stack.amount)

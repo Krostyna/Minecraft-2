@@ -11,6 +11,8 @@ public class Toolbar : MonoBehaviour
 
     public void Start()
     {
+        // Uncomment this if you want to populate toolbar with first 9 blocks of random amount
+        /*
         byte index = 1;
 
         foreach (UIItemSlot s in slots)
@@ -19,8 +21,7 @@ public class Toolbar : MonoBehaviour
             ItemSlot slot = new ItemSlot(s, stack);
             index++;
         }
-
-    
+        */
     }
 
     private void Update()

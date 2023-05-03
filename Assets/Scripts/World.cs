@@ -327,6 +327,7 @@ public class World : MonoBehaviour
         }
     }
 
+    // Generating function to get voxel from our noises
     public byte GetVoxel(Vector3 pos)
     {
         int yPos = Mathf.FloorToInt(pos.y);
@@ -454,6 +455,8 @@ public class BlockType
     public bool isSolid;
     public bool isTransparent;
     public Sprite icon;
+    
+    public float timeToMine;
 
     [Header("Texture Values")]
     public int backFaceTexture;

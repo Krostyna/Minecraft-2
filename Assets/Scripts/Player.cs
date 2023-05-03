@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -34,6 +35,12 @@ public class Player : MonoBehaviour
     public float reach = 8f;
 
     public Toolbar toolbar;
+
+    private float startedMiningTime = 0f;
+    private byte minedVoxel;
+    private bool miningDone;
+
+    public Slider miningSlider;
 
     private void Start()
     {
@@ -69,6 +76,14 @@ public class Player : MonoBehaviour
 
             transform.Rotate(Vector3.up * mouseHorizontal * world.settings.mouseSensitivity);
             cam.Rotate(Vector3.right * -mouseVertical * world.settings.mouseSensitivity);
+        }
+        else
+        {
+            // We are in UI (creative inventory) and also pressed escape
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                world.inUI = !world.inUI;
+            }
         }
     }
 
@@ -142,11 +157,82 @@ public class Player : MonoBehaviour
 
         if (highlightBlock.gameObject.activeSelf)
         {
-            // Destroy block
+            // Mine block
             if (Input.GetMouseButtonDown(0))
-                world.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0);
+            {
+                startedMiningTime = Time.time;
+                minedVoxel = world.GetChunkFromVector3(highlightBlock.position).GetVoxelFromGlobalVector3(highlightBlock.position);
+                miningDone = false;
+                miningSlider.gameObject.SetActive(true);
+                miningSlider.value = 0;
 
-            // Destroy block
+            }
+            // Mining block or multiple block in chain
+            if (Input.GetMouseButton(0))
+            {
+                if (miningDone)
+                {
+                    startedMiningTime = Time.time;
+                    minedVoxel = world.GetChunkFromVector3(highlightBlock.position).GetVoxelFromGlobalVector3(highlightBlock.position);
+                    miningDone = false;
+                    miningSlider.gameObject.SetActive(true);
+                    miningSlider.value = 0;
+                }
+
+                if (startedMiningTime + world.blockTypes[minedVoxel].timeToMine <= Time.time && !miningDone)
+                {
+                    world.GetChunkFromVector3(highlightBlock.position).EditVoxel(highlightBlock.position, 0);
+                    miningDone = true;
+                    miningSlider.gameObject.SetActive(false);
+
+                    bool added = false;
+                    UIItemSlot emptySlot = null;
+                    // Check Toolbar if we have item alreadz to stack it
+                    foreach(UIItemSlot slot in toolbar.slots)
+                    {
+                        if (slot.itemSlot!=null && slot.itemSlot.stack != null)
+                        {
+                            // We found same item in toolbar and add 1 to it
+                            if (slot.itemSlot.stack.id == minedVoxel)
+                            {
+                                slot.itemSlot.Get(1);
+                                added = true;
+                                break;
+                            }
+                        }
+                        else if (emptySlot == null)
+                        {
+                            // We save the first emptz slot in case we didn't found the item stack
+                            emptySlot = slot;
+                        }
+                        
+                    }
+
+                    // The item is not on the toolbar or it is full
+                    if(added == false)
+                    { 
+                        // We have some empty slot
+                        if(emptySlot != null)
+                        {
+                            ItemStack stack = new ItemStack(minedVoxel, 1);
+                            ItemSlot slot = new ItemSlot(emptySlot, stack);
+                        }
+                    }
+                }
+                else
+                {
+                    miningSlider.value = (Time.time - startedMiningTime) / world.blockTypes[minedVoxel].timeToMine; 
+                }
+            }
+
+            // We stopped mining
+            if (Input.GetMouseButtonUp(0))
+            {
+                miningDone = true;
+                miningSlider.gameObject.SetActive(false);
+            }
+
+            // Place block
             if (Input.GetMouseButtonDown(1))
             {
                 if (toolbar.slots[toolbar.slotIndex].HasItem)
