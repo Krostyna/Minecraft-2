@@ -7,20 +7,25 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    // Flags for our movenent detection
     public bool isGrounded;
     public bool isSprinting;
 
+    // References for our main and only camera and our World 
     private Transform cam;
     private World world;
 
+    // Default setting we use for movement and phycisc of player
     public float walkSpeed = 3f;
     public float sprintSpeed = 6f;
     public float jumpForce = 5f;
     public float gravity = -9.8f;
 
+    // Settings we can adjust for our player avatar - can change based on morphing etc.
     public float playerWidth = 0.25f;
     public float playerHeight = 2f;
 
+    // Basic inputs for our player
     private float horizontal;
     private float vertical;
     private float mouseHorizontal;
@@ -29,17 +34,21 @@ public class Player : MonoBehaviour
     private float verticalMomentum = 0;
     private bool jumpRequest;
 
+    // Helping values for our custom raycast
     public Transform highlightBlock;
     public Transform placeBlock;
     public float checkIncrement = 0.1f;
     public float reach = 8f;
 
+    // Toolbar UI we see on bottom of creen in game
     public Toolbar toolbar;
 
+    // If we started mining how long it will take and if we mined blocked
     private float startedMiningTime = 0f;
     private byte minedVoxel;
     private bool miningDone;
 
+    // Loading bar for mining progress
     public Slider miningSlider;
 
     private void Start()
@@ -50,6 +59,7 @@ public class Player : MonoBehaviour
         world.inUI = false;
     }
 
+    // Fixed Update only compute movement and jumping, Camera is in normal update for Higher FPS monitors etc.
     private void FixedUpdate()
     {
         if (!world.inUI)
@@ -64,11 +74,13 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        // Opening Creative Inventory or closing it
         if(Input.GetKeyDown(KeyCode.I))
         {
             world.inUI = !world.inUI;
         }
-
+        
+        // If we are not in Creative Inventory we can move and interact with world
         if (!world.inUI)
         {
             GetPlayerInputs();
@@ -87,6 +99,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Function to request jump - adding force to upwards movement
     void Jump()
     {
         verticalMomentum = jumpForce;
@@ -94,6 +107,7 @@ public class Player : MonoBehaviour
         jumpRequest = false;
     }
 
+    // Calculating movement of player based on his inputs
     private void CalculateVelocity()
     {
         // Affect vertical momentum with gravity
@@ -121,6 +135,7 @@ public class Player : MonoBehaviour
 
     }
 
+    // Main function for In Game inputs to control characters actions
     private void GetPlayerInputs()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -140,6 +155,7 @@ public class Player : MonoBehaviour
             #endif
         }
 
+        // Mouse inputs from Input Manager settings
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
         mouseHorizontal = Input.GetAxis("Mouse X");
@@ -258,11 +274,13 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Computation of "raycast" to know what block are we looking at to edit - build onto or destroy
     private void placeCursorBlocks()
     {
         float step = checkIncrement;
         Vector3 lastPos = new Vector3();
 
+        // Custom Raycast - Unity raycast don't work with our custom Mesh
         while(step < reach)
         {
             Vector3 pos = cam.position+ (cam.forward*step);
@@ -288,6 +306,7 @@ public class Player : MonoBehaviour
 
     }
 
+    // When we are checking if we hit ground after fall/jump to enable jumping again
     private float checkDownSpeed(float downSpeed)
     {
         if(
@@ -307,6 +326,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // For our Jumping function to compute with gravitation and collisions
     private float checkUpSpeed(float upSpeed)
     {
         if (
@@ -323,7 +343,9 @@ public class Player : MonoBehaviour
             return upSpeed;
         }
     }
+    
 
+    // Flags for every side of player for movement function - based on his height and width
     public bool front
     {
         get

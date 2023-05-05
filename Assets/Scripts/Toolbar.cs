@@ -41,6 +41,7 @@ public class Toolbar : MonoBehaviour
         if (slotIndex < 0)
             slotIndex = slots.Length - 1;
 
+        // Position we are not srcolled on and we want to highlight for Player
         highlight.position = slots[slotIndex].slotIcon.transform.position;
     }
 }

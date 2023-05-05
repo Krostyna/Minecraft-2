@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Chunk
 {
+    // This chunk coordinates
     public ChunkCoord coord;
 
+    // Game object that represents this chunk
     GameObject chunkObject;
+
+    // Mesh rendered and filter for the chunk
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
+    // Variables for tracking vertices, triangles, materials, UVs, and normals
     int vertexIndex = 0;
     List<Vector3> vertices = new List<Vector3>();
     List<int> triangles = new List<int>();
@@ -18,17 +23,22 @@ public class Chunk
     List<Vector2> uvs = new List<Vector2>();
     List<Vector3> normals = new List<Vector3>();
 
+    // Position of the chunk in the world
     public Vector3 position;
 
+    // Flag to determine if the chunk is active - in View distance
     private bool _isActive;
 
+    // Chunk data for this chunk
     ChunkData chunkData;
 
+    // Constructor
     public Chunk(ChunkCoord _coord)
     {
         coord = _coord;
     }
 
+    // Initialize the chunk object and mesh renderer/filter
     public void Init()
     {
         chunkObject = new GameObject();
@@ -46,19 +56,21 @@ public class Chunk
 
         chunkData = World.Instance.worldData.RequestChunk(new Vector2Int((int)position.x, (int)position.z), true);
 
-        lock(World.Instance.ChunkUpdateThreadLock)
+        // Add this chunk to the list of chunks to update - locking it so we don't use it from different threads at the same time
+        lock (World.Instance.ChunkUpdateThreadLock)
         {
             World.Instance.chunksToUpdate.Add(this);
         }
         
     }
 
-    
+    // Update the mesh data for this chunk
     public void UpdateChunk()
-    { 
-
+    {
+        // Clear the old mesh data
         ClearMeshData();
 
+        // Loop through all voxels in the chunk and update mesh data for solid voxels
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; x++)
@@ -71,12 +83,14 @@ public class Chunk
             }
         }
 
+        // Add this chunk to the list of chunks to draw
         lock (World.Instance.chunksToDraw)
         {
             World.Instance.chunksToDraw.Enqueue(this);
         }
     }
 
+    // Clear the mesh data for this chunk
     void ClearMeshData()
     {
         vertexIndex = 0;
@@ -87,6 +101,7 @@ public class Chunk
         normals.Clear();
     }
 
+    // Flag to determine if the chunk is active
     public bool isActive
     {
         get { return _isActive; }
@@ -98,7 +113,7 @@ public class Chunk
 
     }
 
-
+    // Check if a voxel is inside this chunk
     bool IsVoxelInChunk(int x, int y, int z)
     {
         if (x < 0 || x > VoxelData.ChunkWidth - 1 || y < 0 || y > VoxelData.ChunkHeight - 1 || z < 0 || z > VoxelData.ChunkWidth - 1)
@@ -107,6 +122,7 @@ public class Chunk
             return true;
     }
 
+    // Function to EditVoxel to a new ID - Air to block, block to block etc.
     public void EditVoxel(Vector3 pos, byte newID)
     {
         int xCheck = Mathf.FloorToInt(pos.x);
@@ -127,6 +143,7 @@ public class Chunk
         }
     }
 
+    // If we need to update other voxels - are now visible after mining for example
     void UpdateSurroundingVoxels(int x, int y,int z)
     {
         Vector3 thisVoxel = new Vector3(x,y,z);
@@ -144,6 +161,7 @@ public class Chunk
         }
     }
 
+    // Checking if Voxel is Transparent
     bool CheckVoxel(Vector3 pos)
     {
         int x = Mathf.FloorToInt(pos.x);
@@ -156,6 +174,7 @@ public class Chunk
         return World.Instance.blockTypes[chunkData.map_id[x, y, z]].isTransparent;
     }
 
+    // Getting byte - block ID from global position of the block/voxel
     public byte GetVoxelFromGlobalVector3(Vector3 pos)
     {
         int xCheck = Mathf.FloorToInt(pos.x);
@@ -168,7 +187,7 @@ public class Chunk
         return chunkData.map_id[xCheck,yCheck,zCheck];
     }
 
-
+    // Update function to get new mesh data from postion
     void UpdateMeshData(Vector3 pos)
     {
         byte blockID = chunkData.map_id[(int)pos.x, (int)pos.y, (int)pos.z];
@@ -214,6 +233,7 @@ public class Chunk
 
     }
 
+    // Creating mesh based on our verticies, trinagles, uvs
     public void CreateMesh()
     {
         Mesh mesh = new Mesh()
@@ -229,6 +249,7 @@ public class Chunk
         meshFilter.mesh = mesh;
     }
 
+    // Adding texture based on TextureId - posititon in Texture map
     void AddTexture(int textureID)
     {
         float y = textureID / VoxelData.TextureAtlasSizeInBlocks;
@@ -246,6 +267,7 @@ public class Chunk
     }
 }
 
+// Chunk Coordinates that is based only on X and Z and not his Y - compare to other chunks 
 public class ChunkCoord
 {
     public int x;

@@ -13,6 +13,7 @@ public class DebugScreen : MonoBehaviour
     float frameRate;
     float timer;
 
+    // For Player position based on Spawn not real position
     int halfWorldSizeInVoxels;
     int halfWorldSizeInChunks;
 
@@ -27,7 +28,8 @@ public class DebugScreen : MonoBehaviour
 
     private void Update()
     {
-        string debugText = "Minecraft 2 in Unity." + "\n" + " Press F1 to save the world."+ "\n" + " Press I for inventory."+ "\n"+" Press F3 to close this info. ";
+        // We can add to this as we store more information of our game or what we want to debug even in builded game
+        string debugText = "Minecraft 2 in Unity." + "\n" + " Press F1 to save the world." + "\n" + " Press I for inventory."+ "\n" + " Press F3 to close this info.";
         debugText += "\n";
         debugText += frameRate + " FPS";
         debugText += "\n\n";
@@ -43,6 +45,7 @@ public class DebugScreen : MonoBehaviour
 
         text.text = debugText;
 
+        // FPS Calculator
         if (timer > 1f)
         {
             frameRate = (int)(1f / Time.unscaledDeltaTime);

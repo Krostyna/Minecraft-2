@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Just Data class to store basic numbers about single voxels - verticies, trinagles, uvs etc. and some data we don't user to change (static)
 public static class VoxelData
 {
     public const int ChunkWidth = 16;

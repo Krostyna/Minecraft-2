@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DragAndDropHandler : MonoBehaviour
 {
+    // Cursor slot is the slot we are having in our hand when in UI -  we are moving or draging somewhere else
     [SerializeField] private UIItemSlot cursorSlot = null;
     private ItemSlot cursorItemSlot;
 
@@ -36,6 +37,7 @@ public class DragAndDropHandler : MonoBehaviour
         }
     }
 
+    // Main  function to hand what happens if we clicked UI Item Slot
     private void HandleSlotClick(UIItemSlot clickedSlot)
     {
         if (clickedSlot == null) 
@@ -90,6 +92,7 @@ public class DragAndDropHandler : MonoBehaviour
         }
     }
 
+    // Raycasting to check what UI Slot we hit if any
     private UIItemSlot CheckForSlot()
     {
         m_PointerEventData = new PointerEventData(m_EventSystem);

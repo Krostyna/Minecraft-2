@@ -23,10 +23,12 @@ public class ChunkData
         }
     }
 
+    // Map - 3D array to store information of every ID of every voxel in One chunk
     [HideInInspector] // Displaying lots of data in inspector slows it down even more so hide this one
     public byte[,,] map_id = new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
 
+    // Two constructors we can use to create new ChunkData
     public ChunkData(Vector2Int pos)
     {
         position = pos;
@@ -37,7 +39,7 @@ public class ChunkData
         y = _y;
     }
 
-   
+   // Function to Populate or Chunk with Voxels from our predifined values/IDs of each blocks
     public void Populate()
     {
         for (int y = 0; y < VoxelData.ChunkHeight; y++)
@@ -51,7 +53,7 @@ public class ChunkData
                 }
             }
         }
-
+        // Adding it to modfied list Update it 
         World.Instance.worldData.AddToModifiedChunkList(this);
     }
 

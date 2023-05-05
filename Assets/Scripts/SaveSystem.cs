@@ -7,6 +7,7 @@ using System.Threading;
 
 public static class SaveSystem
 {
+    // Main Function to save the whole World
     public static void SaveWorld(WorldData world)
     {
         // Set our save location and make sure we have a saves folder ready to go
@@ -30,6 +31,7 @@ public static class SaveSystem
 
     }
 
+    // Saving called on every chunks
     public static void SaveChunks(WorldData world)
     {
         // Copy modified chunks into a new list and clear the old one to prevent
@@ -47,6 +49,7 @@ public static class SaveSystem
 
     }
 
+    // Load function ont he whole world
     public static WorldData LoadWorld(string worldName, int seed = 0)
     {
         string loadPath = World.Instance.appPath + "/saves/" + worldName + "/";
@@ -74,6 +77,7 @@ public static class SaveSystem
         }
     }
 
+    // One of saving function that is called on every chunk - we can save only one chunk if one was edited 
     public static void SaveChunk(ChunkData chunk, string worldName)
     {
         string chunkName = chunk.position.x + "-" + chunk.position.y;
@@ -93,7 +97,7 @@ public static class SaveSystem
         stream.Close();
     }
 
-
+    // If we want to load only one specific edited chunk
     public static ChunkData LoadChunk(string worldName, Vector2Int position)
     {
         string chunkName = position.x + "-" + position.y;

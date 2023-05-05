@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// SIMPLE 3D PERLIN NOISE FROM YOUTUBE TUTORIAL - can be change for any other Perlin Noise or other Noise library, 3D is only unitys 2D but combined
 public static class Noise 
 {
     public static float Get2DPerlin(Vector2 position, float offset, float scale)

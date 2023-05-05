@@ -5,21 +5,27 @@ using UnityEngine;
 [System.Serializable]
 public class WorldData
 {
+    // Our world name from seed - or default one
     public string worldName = "Prototype";
+    // Seed of our world that is used to Random for Generating consistently
     public int seed;
 
+    // Our main storage of every Chunk based on his position (x,z)
     [System.NonSerialized]
     public Dictionary<Vector2Int, ChunkData> chunks = new Dictionary<Vector2Int, ChunkData>();
 
+    // List of modifiedChunks that needs to be updated
     [System.NonSerialized]
     public List<ChunkData> modifiedChunks = new List<ChunkData>();
 
+    // If we want to Apply modifications we can add chunk to this list 
     public void AddToModifiedChunkList (ChunkData chunk)
     {
         if(!modifiedChunks.Contains(chunk))
             modifiedChunks.Add(chunk);
     }
 
+    // Two constructors we can use to create world
     public WorldData(string _worldName, int _seed)
     {
         worldName = _worldName;
@@ -32,6 +38,7 @@ public class WorldData
         seed = wD.seed;
     }
 
+    // Trying to request chunk - create if needed or return existing one
     public ChunkData RequestChunk (Vector2Int coord, bool create)
     {
         ChunkData c;
@@ -55,6 +62,7 @@ public class WorldData
         return c;
     }
 
+    // Addding Chunk to our Chunks Dictionary if is not already there
     public void LoadChunk(Vector2Int coord)
     {
         if (chunks.ContainsKey(coord))
@@ -73,6 +81,7 @@ public class WorldData
         chunks[coord].Populate();
     }
 
+    // Flag if Voxel is in the World
     bool isVoxelInWorld(Vector3 pos)
     {
         if (pos.x >= 0 && pos.x < VoxelData.WorldSizeInVoxels && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < VoxelData.WorldSizeInVoxels)
@@ -81,6 +90,7 @@ public class WorldData
             return false;
     }
 
+    // Setting voxel from postiton to specific value - grass, snow, air etc.
     public void SetVoxel(Vector3 pos, byte value)
     {
         // If the voxel is outside of the world we don't need to do anything with it

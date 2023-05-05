@@ -25,7 +25,7 @@ public class TitleMenu : MonoBehaviour
 
     private void Awake()
     {
-
+        // If we already have settings file then load it and parse it
         if (File.Exists(Application.dataPath + "/settings.cfg"))
         {
             Debug.Log("Settings file found. Loading file.");
@@ -33,6 +33,7 @@ public class TitleMenu : MonoBehaviour
             string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
             settings = JsonUtility.FromJson<Settings>(jsonImport);
         }
+        // If we don't have it then create a new one with default values
         else
         {
             Debug.Log("No settings file found, creating new one.");
@@ -45,18 +46,26 @@ public class TitleMenu : MonoBehaviour
 
     public void StartGame()
     {
+        // Calculating seed based on string input
         VoxelData.seed = Mathf.Abs(seedField.text.GetHashCode()) / VoxelData.WorldSizeInChunks;
         Debug.Log(VoxelData.seed);
+
+        // Parsing our seed so it is not too long
         if(VoxelData.seed.ToString().Length > 6)
         {
             VoxelData.seed = int.Parse(VoxelData.seed.ToString().Substring(0, 6));
         }
+
+        // Saving seed as our World name for Saving purporses
         VoxelData.worldName = seedField.text;
+
+        // Switching to the Main Scene where we start generating our World
         SceneManager.LoadScene("World", LoadSceneMode.Single);
     }
 
     public void EnterSettings()
     {
+        // Updating setting to what we found in the file "settings.cfg" 
         viewDistanceSlider.value = settings.viewDistance;
         UpdateViewDistanceSlider();
         viewDistanceText.text = "View Distance: " + viewDistanceSlider.value;
@@ -73,13 +82,16 @@ public class TitleMenu : MonoBehaviour
 
     public void LeaveSettings()
     {
+        // Saving setting that we got from inputs of player
         settings.viewDistance = (int)viewDistanceSlider.value;
         settings.mouseSensitivity = mouseSlider.value;
         settings.enableThreading = threadingToggle.isOn;
 
+        // Saving them to file
         string jsonExport = JsonUtility.ToJson(settings);
         File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
 
+        // Getting back to Main menu
         mainMenuObject.SetActive(true);
         settingsObject.SetActive(false);
     }

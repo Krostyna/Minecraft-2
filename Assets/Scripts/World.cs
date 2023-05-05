@@ -8,55 +8,77 @@ public class World : MonoBehaviour
 {
     public Settings settings;
 
+    // Array to hold biome attribute data
     [Header("World Generation Values")]
     public BiomeAttribute[] biomes;
 
+    // Reference to the player object
     public Transform player;
+    // The player's spawn position in the world
     public Vector3 spawnPosition;
 
+    // Materials used for rendering chunks
     public Material material;
     public Material transparentMaterial;
 
+    // Array to hold block type data
     public BlockType[] blockTypes;
 
+    // 2D array to hold all the chunks in the world
     Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
 
+    // List of chunk coordinates that are currently active in the world
     List<ChunkCoord> activeChunks = new List<ChunkCoord>();
+
+    // The chunk coordinates of the player's current and previous chunk
     public ChunkCoord playerChunkCoord;
     ChunkCoord playerLastChunkCoord;
 
+    // List of chunks that need to be created, updated and drawn
     List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
     public List<Chunk> chunksToUpdate = new List<Chunk>();
     public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
 
+    // Flag indicating whether modifications are currently being applied to the world
     bool applyingModifications = false;
 
+    // Queue of modification requests to be applied to the world
     Queue<Queue<VoxelMod>> modifications = new Queue<Queue<VoxelMod>>();
 
+    // Flag indicating whether the player is currently in the UI
     private bool _inUI = false;
 
+    // Reference to the debug screen object
     public GameObject debugScreen;
 
+    // Reference to the creative inventory window object
     public GameObject creativeInventoryWindow;
+
+    // Reference to the cursor slot object
     public GameObject cursorSlot;
 
+    // References to threads that handles chunk updates
     Thread ChunkUpdateThread;
     public object ChunkUpdateThreadLock = new object();
     public object ChunkListThreadLock = new object();
 
+    // Singleton instance of the World class
     private static World _instance;
     public static World Instance
     {
         get { return _instance; }
     }
 
+    // Object containing data for the world (e.g. seed, name)
     public WorldData worldData;
 
+    // The path to the application's data directory (your config file will be here)
     public string appPath;
 
     private void Awake()
     {
-        if(_instance!=null && _instance!=this)
+        // Ensure that only one instance of the World class exists in the scene
+        if (_instance!=null && _instance!=this)
         {
             Destroy(this.gameObject);
         }
@@ -65,34 +87,44 @@ public class World : MonoBehaviour
             _instance = this;
         }
 
+        // Get the path to the application's data directory
         appPath = Application.persistentDataPath;
     }
 
     private void Start()
     {
+        // If no world name has been set, use a default name
         if (VoxelData.worldName == null)
             VoxelData.worldName = "New World";
+
         worldData.worldName = VoxelData.worldName;
+
         Debug.Log("Generating New World using seed " + VoxelData.seed);
 
+        // Load settings from the settings.cfg file
         string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
         settings = JsonUtility.FromJson<Settings>(jsonImport);
 
+        // Load data or create it if they don't exists
         worldData = SaveSystem.LoadWorld(worldData.worldName);
 
+        // Make sure the view and load distances are within the appropriate limits
         if (settings.viewDistance > VoxelData.WorldSizeInChunks / 2)
             settings.viewDistance = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2 - 1);
         if (settings.loadDistance > VoxelData.WorldSizeInChunks / 2)
             settings.loadDistance = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2 - 1);
 
+        // Initialize the random number generator with the seed defined in VoxelData (generated from World Name)
         Random.InitState(VoxelData.seed);
 
+        // If multithreading is enabled, start a new thread to handle chunk updates
         if (settings.enableThreading)
         {
             ChunkUpdateThread = new Thread(new ThreadStart(ThreadedUpdate));
             ChunkUpdateThread.Start();
         }
 
+        // Set the spawn position to the center of the world and start generating the world around player
         spawnPosition = new Vector3((VoxelData.WorldSizeInChunks*VoxelData.ChunkWidth) / 2f, VoxelData.ChunkHeight, (VoxelData.WorldSizeInChunks * VoxelData.ChunkWidth) / 2f);
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.position);
@@ -108,6 +140,7 @@ public class World : MonoBehaviour
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
             CheckViewDistance();
 
+        // Check if we need to create more chunks - new world or we moved and create it
         if (chunksToCreate.Count > 0)
             CreateChunk();
 
@@ -125,6 +158,7 @@ public class World : MonoBehaviour
                 UpdateChunks();
         }
 
+        // Some default "non gameplay" inputs handlers
         if (Input.GetKeyDown(KeyCode.F3))
             debugScreen.SetActive(!debugScreen.activeSelf);
 
@@ -143,7 +177,7 @@ public class World : MonoBehaviour
         }
     }
 
-
+    // Main Function to Generate World at the begging of the game
     void GenerateWorld()
     {
         for(int x = (VoxelData.WorldSizeInChunks / 2)-settings.viewDistance; x < (VoxelData.WorldSizeInChunks / 2) + settings.viewDistance; x++)
@@ -160,6 +194,8 @@ public class World : MonoBehaviour
         CheckViewDistance();
     }
 
+
+    // Creating Chunk
     void CreateChunk()
     {
         ChunkCoord c = chunksToCreate[0];
@@ -167,24 +203,25 @@ public class World : MonoBehaviour
         chunks[c.x,c.z].Init();
     }
 
+    // Updating Chunk 
     void UpdateChunks()
     {
         lock (ChunkUpdateThreadLock)
         {
-
             chunksToUpdate[0].UpdateChunk();
             if (!activeChunks.Contains(chunksToUpdate[0].coord))
                 activeChunks.Add(chunksToUpdate[0].coord);
             chunksToUpdate.RemoveAt(0);
-
         }
     }
 
+    // Simple function we can call in Debug Screen to get if we are generating chunks without them being public
     public int ChunksToGenerate()
     {
         return chunksToCreate.Count;
     }
 
+    // When we are using Threads use them to apply changes and updated them so FPS won't drop - main thread
     void ThreadedUpdate()
     {
         while(true)
@@ -197,6 +234,7 @@ public class World : MonoBehaviour
         }
     }
 
+    // Just to save memory/Threads we want to have this little save function to disable/abort threads
     private void OnDisable()
     {
         if (settings.enableThreading)
@@ -205,6 +243,8 @@ public class World : MonoBehaviour
         }
     }
 
+
+    // Appply Modification - edits of the world 
     void ApplyModifications()
     {
         applyingModifications = true;
@@ -224,6 +264,7 @@ public class World : MonoBehaviour
         applyingModifications = false;
     }
 
+    // Getting Chunk Coord - in map of chunks - based on position from the world
     ChunkCoord GetChunkCoordFromVector3 (Vector3 pos)
     {
         int x = Mathf.FloorToInt(pos.x / VoxelData.ChunkWidth);
@@ -231,6 +272,7 @@ public class World : MonoBehaviour
         return new ChunkCoord(x, z);
     }
 
+    // Getting Chunk based on position from world
     public Chunk GetChunkFromVector3(Vector3 pos)
     {
         int x = Mathf.FloorToInt(pos.x / VoxelData.ChunkWidth);
@@ -238,6 +280,7 @@ public class World : MonoBehaviour
         return chunks[x,z];
     }
 
+    // Checking player distance and loading/unloading chunks based on that
     void CheckViewDistance()
     {
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
@@ -280,12 +323,14 @@ public class World : MonoBehaviour
             }
         }    
 
+        // Deactivating chunks to save memory
         foreach(ChunkCoord c in previouslyActiveChunks)
         {
             chunks[c.x,c.z].isActive = false;
         }
     }
 
+    // Check if voxel is solid or not - Air or not right now
     public bool CheckForVoxel(Vector3 pos)
     {
         byte voxel_id = worldData.GetVoxel(pos);
@@ -293,6 +338,7 @@ public class World : MonoBehaviour
         return blockTypes[voxel_id].isSolid;
     }
 
+    // Check if Voxel is Transparent (we need to render blocks behind it)
     public bool CheckIfVoxelTransparent(Vector3 pos)
     {
         byte voxel_id = worldData.GetVoxel(pos);
@@ -300,7 +346,7 @@ public class World : MonoBehaviour
         return blockTypes[voxel_id].isTransparent;
     }
 
-
+    // Flag if the player is right now in UI - creative invenory right now only
     public bool inUI
     {
         get
@@ -332,7 +378,7 @@ public class World : MonoBehaviour
     {
         int yPos = Mathf.FloorToInt(pos.y);
 
-        /* IMMUTABLE PASS */
+        /* Air or Not Air generation */
 
         // If Outside world, return Air.
         if (!isVoxelInWorld(pos))
@@ -342,7 +388,7 @@ public class World : MonoBehaviour
         if (yPos == 0)
             return 1;
 
-        /* BIOME SELECTION PASS */
+        /* Calculating right biomes and heights for them */
 
         int solidGroundHeight = 42;
 
@@ -382,14 +428,14 @@ public class World : MonoBehaviour
         int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
         int snowHeight = 78;
 
-        /* BASIC TERRAIN PASS */
+        /* Biome generation - top 5 overlay blocks */
 
         byte voxelValue = 0; // Air block
 
         if (yPos == terrainHeight)
         {
             if (yPos > snowHeight)
-                voxelValue = 14;
+                voxelValue = 14; // Snow block
             else
             {
                 voxelValue = biome.surfaceBlock; // Solid biome block
@@ -401,7 +447,7 @@ public class World : MonoBehaviour
             return 0; // Air block
         else voxelValue = 2; // Stone block (underground)
 
-        /* SECOND PASS - Ores not set right now */
+        /* Underground generation - Ores or caves not set right now */
 
         if (voxelValue == 2)
         {
@@ -417,7 +463,7 @@ public class World : MonoBehaviour
             }
         }
 
-        /* TREE PASS */
+        /* Structures, Trees and decoration Generation */
         
         if(yPos == terrainHeight && biome.placeMajorFlora)
         {
@@ -435,6 +481,7 @@ public class World : MonoBehaviour
         
     }
 
+    // Flag to check if the Chunk is in the World based on Coord (e.g. we need to create it)
     bool isChunkInWorld(ChunkCoord coord)
     {
         if(coord.x > 0 && coord.x < VoxelData.WorldSizeInChunks -1 && coord.z > 0 && coord.z < VoxelData.WorldSizeInChunks-1)
@@ -444,6 +491,7 @@ public class World : MonoBehaviour
 
     }
 
+    // Flag if single Voxel based on his position is in the World
     bool isVoxelInWorld(Vector3 pos)
     {
         if(pos.x >= 0 && pos.x < VoxelData.WorldSizeInVoxels && pos.y >= 0 && pos.y < VoxelData.ChunkHeight && pos.z >= 0 && pos.z < VoxelData.WorldSizeInVoxels)
@@ -454,7 +502,7 @@ public class World : MonoBehaviour
 
 }
 
-
+// Main class for Block Types that we can easily add to our game in Editor
 [System.Serializable]
 public class BlockType
 {
@@ -500,7 +548,7 @@ public class BlockType
 
 }
 
-
+// Simple class to store information about combination of position to ID of block
 public class VoxelMod
 {
     public Vector3 position;
@@ -519,6 +567,7 @@ public class VoxelMod
     }
 }
 
+// Settings we save/load from file and get from Player
 [System.Serializable]
 public class Settings
 {

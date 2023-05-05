@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// For easy use can add more Biomes with simple click and setup (with default values)
 [CreateAssetMenu(fileName ="BiomeAttributes",menuName = "Minecraft/Biome Attribute")]
 public class BiomeAttribute : ScriptableObject
 {
@@ -32,6 +33,7 @@ public class BiomeAttribute : ScriptableObject
     public Lode[] lodes;
 }
 
+// Lode can be coal, diamonds or iron ores - we don't have any right now in game
 [System.Serializable]
 public class Lode
 {
