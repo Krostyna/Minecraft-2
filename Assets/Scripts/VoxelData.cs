@@ -5,8 +5,11 @@ using UnityEngine;
 public static class VoxelData
 {
     public const int ChunkWidth = 16;
-    public const int ChunkHeight = 256;
-    public const int WorldSizeInChunks = 256;
+    public const int ChunkHeight = 128;
+    public const int WorldSizeInChunks = 128;
+
+    public static int seed;
+    public static string worldName;
 
     public static int WorldSizeInVoxels
     {

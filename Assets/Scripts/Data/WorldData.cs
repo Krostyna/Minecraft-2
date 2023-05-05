@@ -38,7 +38,6 @@ public class WorldData
 
         lock (World.Instance.ChunkListThreadLock)
         {
-
             if (chunks.ContainsKey(coord))
             {
                 c = chunks[coord];

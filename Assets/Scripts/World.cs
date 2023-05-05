@@ -70,27 +70,22 @@ public class World : MonoBehaviour
 
     private void Start()
     {
-        //Debug.Log("Generating new world using seed " + VoxelData.seed);
+        if (VoxelData.worldName == null)
+            VoxelData.worldName = "New World";
+        worldData.worldName = VoxelData.worldName;
+        Debug.Log("Generating New World using seed " + VoxelData.seed);
 
-        worldData = SaveSystem.LoadWorld("Prototype");
+        string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
+        settings = JsonUtility.FromJson<Settings>(jsonImport);
 
-        if (File.Exists(Application.dataPath + "/settings.cfg"))
-        {
-            string jsonImport = File.ReadAllText(Application.dataPath + "/settings.cfg");
-            settings = JsonUtility.FromJson<Settings>(jsonImport);
-        }
-        else
-        {
-            string jsonExport = JsonUtility.ToJson(settings);
-            File.WriteAllText(Application.dataPath + "/settings.cfg", jsonExport);
-        }
+        worldData = SaveSystem.LoadWorld(worldData.worldName);
 
         if (settings.viewDistance > VoxelData.WorldSizeInChunks / 2)
             settings.viewDistance = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2 - 1);
         if (settings.loadDistance > VoxelData.WorldSizeInChunks / 2)
             settings.loadDistance = Mathf.FloorToInt(VoxelData.WorldSizeInChunks / 2 - 1);
 
-        Random.InitState(settings.seed);
+        Random.InitState(VoxelData.seed);
 
         if (settings.enableThreading)
         {
@@ -98,7 +93,7 @@ public class World : MonoBehaviour
             ChunkUpdateThread.Start();
         }
 
-        spawnPosition = new Vector3((VoxelData.WorldSizeInChunks*VoxelData.ChunkWidth) / 2f, VoxelData.ChunkHeight -190f, (VoxelData.WorldSizeInChunks * VoxelData.ChunkWidth) / 2f);
+        spawnPosition = new Vector3((VoxelData.WorldSizeInChunks*VoxelData.ChunkWidth) / 2f, VoxelData.ChunkHeight, (VoxelData.WorldSizeInChunks * VoxelData.ChunkWidth) / 2f);
         GenerateWorld();
         playerLastChunkCoord = GetChunkCoordFromVector3(player.position);
 
@@ -183,6 +178,11 @@ public class World : MonoBehaviour
             chunksToUpdate.RemoveAt(0);
 
         }
+    }
+
+    public int ChunksToGenerate()
+    {
+        return chunksToCreate.Count;
     }
 
     void ThreadedUpdate()
@@ -380,21 +380,28 @@ public class World : MonoBehaviour
         sumOfHeights /= count;
 
         int terrainHeight = Mathf.FloorToInt(sumOfHeights + solidGroundHeight);
-
+        int snowHeight = 78;
 
         /* BASIC TERRAIN PASS */
 
-        byte voxelValue = 0;
+        byte voxelValue = 0; // Air block
 
         if (yPos == terrainHeight)
-            voxelValue = biome.surfaceBlock; //Solid block
+        {
+            if (yPos > snowHeight)
+                voxelValue = 14;
+            else
+            {
+                voxelValue = biome.surfaceBlock; // Solid biome block
+            }
+        }
         else if (yPos < terrainHeight && yPos > terrainHeight - 4)
-            voxelValue = biome.subSurfaceBlock;
+            voxelValue = biome.subSurfaceBlock; // Solid subsurface biome block
         else if (yPos > terrainHeight)
-            return 0; //Air block
-        else voxelValue = 2; //Grass block
+            return 0; // Air block
+        else voxelValue = 2; // Stone block (underground)
 
-        /* SECOND PASS */
+        /* SECOND PASS - Ores not set right now */
 
         if (voxelValue == 2)
         {
@@ -519,15 +526,11 @@ public class Settings
     public string version = "0.1";
 
     [Header("Performance")]
-    public int loadDistance = 5;
-    public int viewDistance = 5;
+    public int loadDistance = 32;
+    public int viewDistance = 32;
     public bool enableThreading = true;
 
     [Header("Controls")]
     [Range(0.1f,10f)]
     public float mouseSensitivity = 2.0f;
-
-    [Header("World Generation")]
-    public int seed;
-
 }

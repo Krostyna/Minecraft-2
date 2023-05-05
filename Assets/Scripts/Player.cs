@@ -246,10 +246,13 @@ public class Player : MonoBehaviour
             // Place block
             if (Input.GetMouseButtonDown(1))
             {
-                if (toolbar.slots[toolbar.slotIndex].HasItem)
+                if (transform.position.y < VoxelData.ChunkHeight)
                 {
-                    world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
-                    toolbar.slots[toolbar.slotIndex].itemSlot.Take(1);
+                    if (toolbar.slots[toolbar.slotIndex].HasItem)
+                    {
+                        world.GetChunkFromVector3(placeBlock.position).EditVoxel(placeBlock.position, toolbar.slots[toolbar.slotIndex].itemSlot.stack.id);
+                        toolbar.slots[toolbar.slotIndex].itemSlot.Take(1);
+                    }
                 }
             }
         }
@@ -288,7 +291,7 @@ public class Player : MonoBehaviour
     private float checkDownSpeed(float downSpeed)
     {
         if(
-            world.CheckForVoxel(new Vector3 (transform.position.x - playerWidth, transform.position.y+downSpeed, transform.position.z-playerWidth))||
+            world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth)) ||
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth)) ||
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z + playerWidth))

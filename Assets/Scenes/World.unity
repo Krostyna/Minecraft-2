@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: e3a7d4e240111f14a82abf8b00175bd5,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -379,11 +380,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     version: 0.1
-    loadDistance: 30
-    viewDistance: 30
-    enableThreading: 1
+    loadDistance: 10
+    viewDistance: 10
+    enableThreading: 0
     mouseSensitivity: 2
-    seed: 111111
   biomes:
   - {fileID: 11400000, guid: ef9f85ffb6b9f534ba6b58e634794c82, type: 2}
   - {fileID: 11400000, guid: 36f7b5a8c756e9c44b23a80bf9ccc407, type: 2}
@@ -1680,7 +1680,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &577126097
 Transform:
   m_ObjectHideFlags: 0
@@ -2733,7 +2733,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1231705839
 RectTransform:
   m_ObjectHideFlags: 0

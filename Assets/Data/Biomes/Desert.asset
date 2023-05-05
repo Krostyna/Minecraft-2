@@ -15,7 +15,7 @@ MonoBehaviour:
   biomeName: Desert
   offset: 6545
   scale: 0.058
-  terrainHeight: 70
+  terrainHeight: 20
   terrainScale: 0.05
   surfaceBlock: 4
   subSurfaceBlock: 4
