@@ -50,7 +50,7 @@ Sprint - Levý Shift
 
 - Svět obsahujes: šedé - kámen, zelené - tráva, bíle - sníh, černé - bedrock, hnědé - hlína, žluté - pisek kostky. 
 
--Dále obsahuje stromy a kaktusy a jejich náležité kostky.
+- Dále obsahuje stromy a kaktusy a jejich náležité kostky.
 
 - Všechny aktuálně implementované kostky jsou v Creative invenáři a dají se vzít a stavět z nich (pro zjednodušení čitelnosti kostek mají MC ikonky v inv)
 
